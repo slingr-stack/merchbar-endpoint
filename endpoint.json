@@ -1,0 +1,52 @@
+{
+  "label": "Merchbar",
+  "name": "merchbar",
+  "apiVersion": "v1",
+  "internal": false,
+  "configurationType": "GLOBAL",
+  "deployment": {
+    "profiles": [
+      {
+        "name": "default",
+        "label": "Default",
+        "memory": 256,
+        "description": "Default configuration"
+      }
+    ],
+    "allowMultipleInstances": false
+  },
+  "icon48": "https://storage.googleapis.com/static.slingrs.io/platform/endpoints/merchbar.png",
+  "status": "ACTIVE",
+  "stores": [],
+  "events": [],
+  "functions": [
+    {
+      "label": "GET",
+      "name": "_get"
+    },
+    {
+      "label": "POST",
+      "name": "_post"
+    },
+    {
+      "label": "PATCH",
+      "name": "_patch"
+    }
+  ],
+  "scripts": [
+    "functions.js"
+  ],
+  "configuration": [
+    {
+      "name": "userName",
+      "label": "User",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "userPassword",
+      "label": "Password",
+      "type": "password"
+    }
+  ]
+}
