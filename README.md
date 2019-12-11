@@ -1,6 +1,7 @@
 # Merchbar endpoint
 
 ## Overview
+
 The Merchbar API is based on REST principles. 
 
 For more information please refer to [docs](https://slingr-stack.github.io/platform/endpoints_mertchbar.html).

@@ -2,26 +2,100 @@
 // Public API
 /////////////////////////////
 
-endpoint.testing = function () {
-    return {status: "ok"};
+var analyzeParams = function (args) {
+    var paramsSize = 0;
+    var params = [];
+    var argumentsObj = null;
+    for (var i = 0; i < args.length; i++) {
+        if (typeof args[i] != 'object') {
+            paramsSize++;
+            params.push(args[i]);
+        } else {
+            argumentsObj = args[i];
+        }
+
+    }
+    return {
+        paramsSize: paramsSize,
+        argumentsObj: argumentsObj,
+        params: params
+    };
 };
 
-// // GET
-// /v1/stores
-// /v1/stores/{id}
-// /v1/stores/{id}/merch
-// /v1/orders/{order_id}
-//
-// // POST
-// /v1/order_previews
-// /v1/orders
-// /v1/orders/{order_id}/cancel
-//
-// // PATCH
-// /v1/orders/{order_id}
+var getUrl = function (url, params, args, argsToPath) {
 
+    if (!url) {
+        return null;
+    }
 
+    if (params.length > 0) {
+        var i = 0;
+        url = url.replace(/:(\w+)/g, function () {
+            return params[i++];
+        });
+    }
 
+    if (args && argsToPath) {
+        var tmp = Object.keys(args).map(function (k) {
+            return encodeURIComponent(k) + '=' + args[k];
+        }).join('&');
+
+        if (url.split("\?").length > 1) {
+            url += '&' + tmp;
+        } else {
+            url += '?' + tmp;
+        }
+    }
+
+    return url;
+};
+
+endpoint.stores = {};
+endpoint.stores.get = function () {
+    var url1 = '/v1/stores';
+    var url2 = '/v1/stores/:id';
+    var params = analyzeParams(arguments);
+    var url = getUrl(params.params.length > 0 ? url2 : url1, params.params, params.argumentsObj, true);
+    return endpoint.get(url);
+};
+
+endpoint.stores.merch = {};
+endpoint.stores.merch.get = function () {
+    var urlPath = '/v1/stores/:id/merch';
+    var params = analyzeParams(arguments);
+    var url = getUrl(urlPath, params.params, params.argumentsObj, true);
+    return endpoint.get(url);
+};
+
+endpoint.orders = {};
+endpoint.orders.get = function () {
+    var urlPath = "/v1/orders/:order_id";
+    var params = analyzeParams(arguments);
+    var url = getUrl(urlPath, params.params, params.argumentsObj, true);
+    return endpoint.get(url);
+};
+
+endpoint.orderPreviews = {};
+endpoint.orderPreviews.post = function (args) {
+    var urlPath = "/v1/order_previews";
+    return endpoint.post(urlPath, args);
+};
+
+endpoint.orders.post = function (args) {
+    var urlPath = "/v1/orders";
+    return endpoint.post(urlPath, args);
+};
+
+endpoint.orders.patch = function (id, args) {
+    var urlPath = "/v1/orders/" + id;
+    return endpoint.patch(urlPath, args);
+};
+
+endpoint.orders.cancel = {};
+endpoint.orders.cancel.post = function (id, args) {
+    var urlPath = "/v1/orders/" + id + "/cancel";
+    return endpoint.post(urlPath, args);
+};
 
 /////////////////////////////////////
 // Public API - Generic Functions
@@ -41,17 +115,6 @@ endpoint.patch = function (url, options) {
     options = checkHttpOptions(url, options);
     return endpoint._patch(options);
 };
-
-endpoint.put = function (url, options) {
-    options = checkHttpOptions(url, options);
-    return endpoint._put(options);
-};
-
-endpoint.delete = function (url) {
-    var options = checkHttpOptions(url, {});
-    return endpoint._delete(options);
-};
-
 
 /////////////////////////////
 //  Private helpers

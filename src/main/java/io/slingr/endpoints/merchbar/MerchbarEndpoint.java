@@ -12,7 +12,7 @@ import io.slingr.endpoints.framework.annotations.SlingrEndpoint;
 @SlingrEndpoint(name = "merchbar", functionPrefix = "_")
 public class MerchbarEndpoint extends HttpEndpoint {
 
-    private static final String API_URL = "";
+    private static final String API_URL = "https://www.merchbar.com";
 
     @EndpointProperty
     private String username;
